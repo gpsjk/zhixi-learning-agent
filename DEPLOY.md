@@ -30,20 +30,22 @@
 ## 三、Secrets 配置
 
 ```toml
-OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxx"
-OPENAI_BASE_URL = "https://api.deepseek.com"
-OPENAI_MODEL = "deepseek-flash"
-OPENAI_VISION_MODEL = ""
+OPENAI_API_KEY = "你的智谱APIKey"
+OPENAI_BASE_URL = "https://open.bigmodel.cn/api/paas/v4"
+OPENAI_MODEL = "glm-5.3-flash"
+OPENAI_VISION_MODEL = "glm-4v-flash"
 ```
 
-- `OPENAI_MODEL` 必须是账号下真实存在的模型。DeepSeek 官方当前可用的是
-  `deepseek-flash` 与 `deepseek-v4-pro`（旧的 `deepseek-v4-flash` 已不存在）。
-- DeepSeek 官方接口**不提供多模态模型**，因此 `OPENAI_VISION_MODEL` 在 DeepSeek 下只能留空，
-  留空时「拍照识题」会提示不可用，其余功能不受影响。
-  如需拍照识题，请换用带视觉能力的兼容服务（如阿里云百炼 `qwen-vl-max`、智谱 `glm-4v`），
-  并同时修改 `OPENAI_BASE_URL` 与 `OPENAI_API_KEY`。
+以上四行已在本地实测通过（文本诊断、练习题生成、拍照识题三条链路均成功）。
+
+- `OPENAI_MODEL` 必须是账号下真实存在的模型，可用 `GET /api/paas/v4/models` 查询。
+  `glm-4-flash` 虽免费，但生成练习题时会漏字段导致格式校验失败，不建议使用。
+  已验证可用：`glm-5.3-flash`、`glm-4.5`、`glm-4.5-air`。
+- `OPENAI_VISION_MODEL` 必须是多模态模型，`glm-4v-flash` 已验证能读图；
+  留空则「拍照识题」提示不可用，其余功能不受影响。
 - 留空 `OPENAI_API_KEY` 时应用进入**演示模式**：错题本、复习训练、统计摘要可用，
   模型相关结果为演示数据。
+- 智谱为国内直连，云端无需代理；若换用 OpenAI 官方接口，需注意数据出境与网络可达性。
 
 ## 四、修改配置
 
