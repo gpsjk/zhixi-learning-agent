@@ -2,6 +2,8 @@
 
 本目录是可直接推送的仓库副本。本地运行方式不变（`start.bat`）；上云时密钥走 Streamlit Secrets。
 
+仓库地址：<https://github.com/gpsjk/zhixi-learning-agent>
+
 ## 一、仓库内容约定
 
 | 文件 | 作用 |
@@ -17,34 +19,39 @@
 
 ## 二、部署步骤
 
-1. 新建 GitHub 仓库（Public 或 Private 均可），把本目录所有文件推送到 `main` 分支。
-2. 打开 <https://share.streamlit.io>，用 GitHub 账号登录并授权。
-3. 点击 **Create app** → **Deploy a public app from GitHub**：
-   - Repository：选择刚建的仓库
-   - Branch：`main`
-   - Main file path：`app.py`
-   - Python version：`3.12`
-4. 展开 **Advanced settings → Secrets**，粘贴下面的配置（换成真实 Key）：
+1. 打开一键预填的部署链接（仓库、分支、入口文件都已带上）：
+
+   <https://share.streamlit.io/deploy?repository=gpsjk/zhixi-learning-agent&branch=main&mainModule=app.py>
+
+2. 用 GitHub 账号登录并授权 Streamlit。
+3. 在 **Advanced settings → Secrets** 粘贴密钥（见第三节），然后点 **Deploy**。
+4. 构建完成后得到固定地址 `https://zhixi-learning-agent.streamlit.app`。
+
+## 三、Secrets 配置
 
 ```toml
 OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxx"
 OPENAI_BASE_URL = "https://api.deepseek.com"
-OPENAI_MODEL = "deepseek-v4-flash"
-OPENAI_VISION_MODEL = "deepseek-vl"
+OPENAI_MODEL = "deepseek-flash"
+OPENAI_VISION_MODEL = ""
 ```
 
-5. 点击 **Deploy**，等待构建完成即可获得固定的 `https://<app名>.streamlit.app` 地址。
+- `OPENAI_MODEL` 必须是账号下真实存在的模型。DeepSeek 官方当前可用的是
+  `deepseek-flash` 与 `deepseek-v4-pro`（旧的 `deepseek-v4-flash` 已不存在）。
+- DeepSeek 官方接口**不提供多模态模型**，因此 `OPENAI_VISION_MODEL` 在 DeepSeek 下只能留空，
+  留空时「拍照识题」会提示不可用，其余功能不受影响。
+  如需拍照识题，请换用带视觉能力的兼容服务（如阿里云百炼 `qwen-vl-max`、智谱 `glm-4v`），
+  并同时修改 `OPENAI_BASE_URL` 与 `OPENAI_API_KEY`。
+- 留空 `OPENAI_API_KEY` 时应用进入**演示模式**：错题本、复习训练、统计摘要可用，
+  模型相关结果为演示数据。
 
-`OPENAI_VISION_MODEL` 必须使用支持图片输入的多模态模型，否则拍照识题会提示不可用，
-其余功能（错题本、复习训练、统计）不受影响。留空 `OPENAI_API_KEY` 时应用进入演示模式。
+## 四、修改配置
 
-## 三、修改配置
-
-- 改密钥：应用页面右上角 → **Settings → Secrets**，保存后应用会自动重启。
+- 改密钥：应用页面右上角 → **Settings → Secrets**，保存后应用自动重启。
 - 改代码：push 到 GitHub `main` 分支，Cloud 自动重新部署。
 - 查看日志：应用页面右下角 **Manage app**。
 
-## 四、本地与云端的差异
+## 五、本地与云端的差异
 
 | 项目 | 本地 | 云端 |
 | --- | --- | --- |
